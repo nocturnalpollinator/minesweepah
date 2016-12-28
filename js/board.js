@@ -236,19 +236,15 @@ function Board(width, height, mines) {
 	}
 
 	this.checkBrick = function(n) {
-		n = parseInt(n);
-		console.log(n);
+		
 		if(this.boardState[n] == 1) {
-			console.log('Board state');
 			return;
 		}
 
 		if(n < 0 || n > (this.width * this.height)) {
-			console.log('Out of bounds');
 			return;
 		}
 
-		console.log('Hello');
 		$('.brick[data-brick=' + n + ']').removeClass('brick-closed').addClass('brick-open');
 		this.openBricks++;
 		this.boardState[n] = 1;
@@ -258,9 +254,10 @@ function Board(width, height, mines) {
 		 	return;
 		}
 		if(n%this.width == 0 || n%this.width == (this.width-1)) {
-			console.log('Out of bounds 2');
 			return;
 		}
+
+		n = parseInt(n);
 
 		this.checkBrick(n+1);
 		this.checkBrick(n-1);
