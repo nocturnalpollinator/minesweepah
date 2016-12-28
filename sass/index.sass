@@ -1,27 +1,12 @@
-@import url('https://fonts.googleapis.com/css?family=VT323')
-
-$bgcolor: #c0c0c0
-
-@mixin border-outset($size)
-	border-top: $size #ffffff solid
-	border-left: $size #ffffff solid
-	border-bottom: $size #808080 solid
-	border-right: $size #808080 solid	
-
-@mixin border-inset($size)
-	border-bottom: $size #ffffff solid
-	border-right: $size #ffffff solid
-	border-top: $size #808080 solid
-	border-left: $size #808080 solid	
+@import 'prep'
 
 *
-	font-family: 'VT323', monospace
+	font-family: $bodyfont
 
 body
 	margin: 0
 	padding: 0
 	background: #222
-
 
 .wrapper
 	margin: 100px auto
@@ -29,21 +14,21 @@ body
 h1
 	text-align: center
 	margin: 0 0 10px 0
-	color: #666
+	color: $hcolor
 
 .gamewindow
-	background: $bgcolor
+	background-color: $boardbg
 	@include border-outset(3px)
 
 .cred
 	margin: 10px 0
 	text-align: center
-	color: #666
+	color: $hcolor
 	a, a:visited
-		color: #666
+		color: $hcolor
 		text-decoration: none
 	a:hover
-		color: #999
+		color: lighten($hcolor, 20)
 	.fa-copyright
 		transform: rotate(180deg)
 		font-size: 0.9em
@@ -95,8 +80,9 @@ h1
 	&-open
 		width: 19px
 		height: 19px
-		border-bottom: 1px #6b6b6b solid
-		border-left: 1px #6b6b6b solid
+		@include border-grid()
+	&-boom
+		background: $red
 
 .menu
 	margin: 5px 7px 7px 7px
@@ -105,24 +91,16 @@ h1
 		margin: 5px 0 0 0
 
 .btn
-	background: $bgcolor
+	background-color: $boardbg
 	@include border-outset(2px)
 	margin: 0
 	display: inline-block
 
-[data-number="1"]
-	color: #0000ff
-[data-number="2"]
-	color: #118301
-[data-number="3"]
+.flag
 	color: #fc0005
-[data-number="4"]
-	color: #000080
-[data-number="5"]
-	color: #7e0001
-[data-number="6"]
-	color: #118280
-[data-number="7"]
-	color: #000000
-[data-number="8"]
-	color: #808080
+	font-size: 0.8em
+	line-height: 0.7em	
+
+@each $i, $color in $numbercolors
+	[data-number="#{$i}"]
+		color: #{$color}

@@ -1,11 +1,15 @@
 function Board(width, height, mines) {
 
+	this.firstOpened	= false;
+	this.timer 			= 0;
+
 	this.width 			= width;
 	this.height 		= height;
 	this.mineAmt 		= mines;
 
 	this.minePos 		= [];
 	this.numberHints 	= [];
+	this.markers		= [];
 
 	this.init = function() {
 		$('.minefield').css('width', width*20);
@@ -14,22 +18,36 @@ function Board(width, height, mines) {
 		for(var i = 0; i < this.height; i++) {
 			for(var j = 0; j < this.width; j++) {
 				$('.minefield').append('<div class="brick brick-closed" data-brick="' + (j+(this.width*i)) + '"></div>');
+				this.markers[(j+(this.width*i))] = 0;
 			}
 		}
 	}
 
-
-	this.shuffleMines = function() {
+	this.shuffleMines = function(n) {
 		var randomNumber;
+		var n = parseInt(n);
 		for(var i = 0; i < this.mineAmt; i++) {
 			randomNumber = Math.floor(Math.random() * (this.width*this.height));
-			if(jQuery.inArray(randomNumber, this.minePos) != -1) {
+			/*
+			No mines or numbers should be under the first opened brick. Therefore there
+			can be no mines on any of the nearby 8 bricks.
+			X X X
+			X O X
+			X X X
+			*/
+			if(jQuery.inArray(randomNumber, this.minePos) != -1 ||
+				randomNumber == n || randomNumber == (n-1) || randomNumber == (n+1) ||
+				randomNumber == (n - this.width) || randomNumber == (n + this.width) ||
+				randomNumber == ((n - this.width) + 1) || randomNumber == ((n - this.width) - 1) ||
+				randomNumber == ((n + this.width) + 1) || randomNumber == ((n + this.width) -1)) {
 				i--;
 			}
 			else {
 				this.minePos.push(randomNumber);
 			}
 		}
+		this.minePos.sort(function(a, b) {return a-b});
+		console.log(this.minePos);
 	}
 
 	this.showMines = function() {
@@ -95,37 +113,112 @@ function Board(width, height, mines) {
 		}
 	}
 
-	this.open = function(n, hincr, vincr) {
-		console.log('n: ' + n + ', hincr: ' + hincr + ', vincr: ' + vincr);
+	this.setTimer = function() {
+		time += 1;
+		if(time < 1000) {
+			var str = (time < 10) ? '00' + time : (time < 100) ? '0' + time : time;
+			$('#time').html(str); 
+		}
+	}
 
-		if(n < 0 || n > (this.width*this.height) || (((n%this.width) == 0) && hincr > 0) || (((n%this.width) == (this.width-1) && hincr < 0))) {
-			console.log("Edge return");
-			return;
+	this.resetTimer = function() {
+		window.clearInterval(this.timer);
+		this.timer = 0;
+		$('#time').html('000');
+		time = 0;
+	}
+
+	this.setCounter = function() {
+		var tmp = this.mineAmt;
+		for(var i = 0; i < this.markers.length; i++) {
+			if(this.markers[i] == 1)
+				tmp--;
 		}
-		$('.brick[data-brick=' + n + ']').removeClass('brick-closed').addClass('brick-open');
-		if(this.numberHints[n] > 0) {
-			console.log("Number return");
-		 	$('.brick[data-brick=' + n + ']').html('<span class="number" data-number="' + this.numberHints[n] + '">' + this.numberHints[n] + '</span>');
-		 	return;
+		var output = (tmp < 10) ? '00' + tmp : (tmp < 100) ? '0' + tmp : tmp;
+		console.log(output);
+		$('#mines').html(output);
+	}
+
+	this.placeMarker = function(n) {
+		this.markers[n] = (this.markers[n] < 2) ? (this.markers[n] + 1) : 0;
+		switch(this.markers[n]) {
+			case 0: $('.brick[data-brick=' + n + ']').html(''); break;
+			case 1: $('.brick[data-brick=' + n + ']').html('<span class="flag"><i class="fa fa-flag" aria-hidden="true"></i></span>'); break;
+			case 2: $('.brick[data-brick=' + n + ']').html('<span class="questionmark">?</span>');
 		}
-		else if(this.numberHints[n] == 0) {	
+		this.setCounter();
+	}
+
+	this.firstOpening = function(n) {
+		this.firstOpened = true;
+		this.shuffleMines(n);
+		//this.showMines();
+		this.generateNumbers();
+		this.timer = window.setInterval(timer, 1000);
+	}
+
+	this.killGame = function() {
+		for(var i = 0; i < this.minePos.length; i++) {
+			$('.brick[data-brick=' + this.minePos[i] + ']')
+				.removeClass('brick-closed')
+				.addClass('brick-open brick-boom')
+				.css('background-color', '')
+				.html('<span class="mine"><i class="fa fa-bomb" aria-hidden="true"></i></span>');
+		}
+		window.clearInterval(this.timer);
+		this.timer = 0;
+		$('.btn-restart').html(':(');
+		setTimeout(function(){ alert('Boom. You ded.')}, 100);
+	}
+
+	this.open = function(n, hincr, vincr, numberRet) {
+
+		// Mines and numbers initialized on the first opened brick.
+		if(!this.firstOpened) {
+			this.firstOpening(n);
+		}
+		
+		if((jQuery.inArray(parseInt(n), this.minePos) != -1) && hincr == 0 && vincr == 0) {
+			this.killGame();
+		}
+		else {
+			console.log('n: ' + n + ', hincr: ' + hincr + ', vincr: ' + vincr);
+			if(numberRet || n < 0 || n > (this.width*this.height) || (((n%this.width) == 0) && hincr > 0) || (((n%this.width) == (this.width-1) && hincr < 0))) {
+				if(numberRet)
+					console.log("Number return");
+				else
+					console.log("Edge return");
+				return;
+			}
+
+			$('.brick[data-brick=' + n + ']').removeClass('brick-closed').addClass('brick-open');
+		
+			var numberBrick = (this.numberHints[n] > 0);
+
+			if(numberBrick)
+			 	$('.brick[data-brick=' + n + ']').html('<span class="number" data-number="' + this.numberHints[n] + '">' + this.numberHints[n] + '</span>');
+
 			if(hincr <= 0){
 				console.log('Going left');
-				this.open(n-1, hincr-1, vincr);
+				this.open(n-1, hincr-1, vincr, numberBrick);
 			}
-			if(hincr >= 0) {
-				console.log('Going right');
-				this.open(parseInt(n)+1, hincr+1, vincr);
+			if(vincr >= 0){
+				console.log('Going down');
+				this.open(parseInt(n)+this.width, hincr, vincr+1, numberBrick);
 			}
 			if(vincr <= 0){
 				console.log('Going up');
-				this.open(n-this.width, hincr, vincr-1);
+				this.open(n-this.width, hincr, vincr-1, numberBrick);
 			}
-			
-			if(vincr >= 0){
-				console.log('Going down');
-				this.open(parseInt(n)+this.width, hincr, vincr+1);
+			if(hincr >= 0) {
+				console.log('Going right');
+				this.open(parseInt(n)+1, hincr+1, vincr, numberBrick);
 			}
 		}
+
+		
+		
+		
+
 	}
 }

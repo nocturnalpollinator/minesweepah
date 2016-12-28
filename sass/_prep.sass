@@ -1,0 +1,35 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=VT323')
+$bodyfont: 'VT323', monospace
+
+// Colors
+$boardbg: 	#c0c0c0
+$hcolor:	#666666
+
+$blue: 		#0000ff
+$green: 	#118301
+$red: 		#fc0005
+$darkblue: 	#000080
+$maroon: 	#7e0001
+$cyan: 		#118280
+$black: 	#000000
+$gray: 		#808080
+
+$numbercolors: (1: $blue, 2: $green, 3: $red, 4: $darkblue, 5: $maroon, 6: $cyan, 7: $black, 8: $gray)
+
+// Border mixins
+@mixin border-outset($size)
+	border-top: $size #ffffff solid
+	border-left: $size #ffffff solid
+	border-bottom: $size #808080 solid
+	border-right: $size #808080 solid	
+
+@mixin border-inset($size)
+	border-bottom: $size #ffffff solid
+	border-right: $size #ffffff solid
+	border-top: $size #808080 solid
+	border-left: $size #808080 solid	
+
+@mixin border-grid()
+	border-bottom: 1px #6b6b6b solid
+	border-left: 1px #6b6b6b solid

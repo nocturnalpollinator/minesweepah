@@ -13,10 +13,10 @@ body {
 h1 {
   text-align: center;
   margin: 0 0 10px 0;
-  color: #666; }
+  color: #666666; }
 
 .gamewindow {
-  background: #c0c0c0;
+  background-color: #c0c0c0;
   border-top: 3px #ffffff solid;
   border-left: 3px #ffffff solid;
   border-bottom: 3px #808080 solid;
@@ -25,12 +25,12 @@ h1 {
 .cred {
   margin: 10px 0;
   text-align: center;
-  color: #666; }
+  color: #666666; }
   .cred a, .cred a:visited {
-    color: #666;
+    color: #666666;
     text-decoration: none; }
   .cred a:hover {
-    color: #999; }
+    color: #999999; }
   .cred .fa-copyright {
     transform: rotate(180deg);
     font-size: 0.9em; }
@@ -97,6 +97,8 @@ h1 {
     height: 19px;
     border-bottom: 1px #6b6b6b solid;
     border-left: 1px #6b6b6b solid; }
+  .brick-boom {
+    background: #fc0005; }
 
 .menu {
   margin: 5px 7px 7px 7px;
@@ -105,13 +107,18 @@ h1 {
     margin: 5px 0 0 0; }
 
 .btn {
-  background: #c0c0c0;
+  background-color: #c0c0c0;
   border-top: 2px #ffffff solid;
   border-left: 2px #ffffff solid;
   border-bottom: 2px #808080 solid;
   border-right: 2px #808080 solid;
   margin: 0;
   display: inline-block; }
+
+.flag {
+  color: #fc0005;
+  font-size: 0.8em;
+  line-height: 0.7em; }
 
 [data-number="1"] {
   color: #0000ff; }
