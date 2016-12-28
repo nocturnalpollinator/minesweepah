@@ -3,6 +3,7 @@ function Board(width, height, mines) {
 	this.firstOpened	= false;
 	this.boardActive	= true;
 	this.timer 			= 0;
+	this.openBricks		= 0;
 
 	this.width 			= width;
 	this.height 		= height;
@@ -217,7 +218,17 @@ function Board(width, height, mines) {
 		this.boardActive = false;
 
 		// Send alert with 0.1s delay to make sure everything has been drawn
-		setTimeout(function(){ alert('Boom. You ded.')}, 100);
+		setTimeout(function() { alert('Boom. You ded.')}, 100);
+	}
+
+	this.didIWin = function() {
+		if(this.openBricks == ((this.width * this.height) - this.mineAmt)) {
+			setTimeout(function() { alert('You are win')}, 100);
+			// Freeze game
+			window.clearInterval(this.timer);
+			this.timer = 0;
+			this.boardActive = false;
+		}
 	}
 
 	this.open = function(n, hincr, vincr, numberRet) {
@@ -247,7 +258,7 @@ function Board(width, height, mines) {
 				console.log('n: ' + n + ', hincr: ' + hincr + ', vincr: ' + vincr);
 				if(numberRet || n < 0 || n > (this.width*this.height) || 
 					(((n%this.width) == 0) && hincr > 0) || 
-					(((n%this.width) == (this.width-1) && hincr < 0))) {
+					(((n%this.width) == (this.width-1) 	&& hincr < 0))) {
 					if(numberRet)
 						console.log("Number return");
 					else
@@ -255,7 +266,12 @@ function Board(width, height, mines) {
 					return;
 				}
 
-				$('.brick[data-brick=' + n + ']').removeClass('brick-closed').addClass('brick-open');
+				if($('.brick[data-brick=' + n + ']').hasClass('brick-closed')) {
+					$('.brick[data-brick=' + n + ']').removeClass('brick-closed').addClass('brick-open');
+					this.openBricks++;
+				}
+				
+				console.log('Open bricks: ' + this.openBricks);
 			
 				var numberBrick = (this.numberHints[n] > 0);
 
@@ -266,19 +282,20 @@ function Board(width, height, mines) {
 					console.log('Going left');
 					this.open(n-1, hincr-1, vincr, numberBrick);
 				}
-				if(vincr >= 0){
-					console.log('Going down');
-					this.open(parseInt(n)+this.width, hincr, vincr+1, numberBrick);
+				if(hincr >= 0) {
+					console.log('Going right');
+					this.open(parseInt(n)+1, hincr+1, vincr, numberBrick);
 				}
 				if(vincr <= 0){
 					console.log('Going up');
 					this.open(n-this.width, hincr, vincr-1, numberBrick);
 				}
-				if(hincr >= 0) {
-					console.log('Going right');
-					this.open(parseInt(n)+1, hincr+1, vincr, numberBrick);
+				if(vincr >= 0){
+					console.log('Going down');
+					this.open(parseInt(n)+this.width, hincr, vincr+1, numberBrick);
 				}
 			}
+			this.didIWin();
 		}
 	}
 }
