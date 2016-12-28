@@ -14,11 +14,14 @@ function Board(width, height, mines) {
 	// - numberHints[] has the size of the amount of bricks and contains
 	// values from 0 to 8 depending on the amount of nearby mines
 	// - markers[] has the size of the amount of bricks and contains
-	// values from 0 to 2 depending on it's marker state 
+	// values from 0 to 2 depending on marker state 
 	// (0 = no marker, 1 = flag marker, 2 = question mark marker)
+	// - boardState[] has the size of the amount of bricks and contains
+	// values 0 for closed brick and 1 for opened brick
 	this.minePos 		= [];
 	this.numberHints 	= [];
 	this.markers		= [];
+	this.boardState		= []
 
 	this.init = function() {
 
@@ -34,8 +37,9 @@ function Board(width, height, mines) {
 				// Populate grid with closed bricks
 				$('.minefield').append('<div class="brick brick-closed" data-brick="' + (j+(this.width*i)) + '"></div>');
 
-				// Populate markers array with inital values (0)
+				// Populate markers[] and boardState[] with inital values (0)
 				this.markers[(j+(this.width*i))] = 0;
+				this.boardState[(j+(this.width*i))] = 0;
 			}
 		}
 
@@ -231,6 +235,44 @@ function Board(width, height, mines) {
 		}
 	}
 
+	this.checkBrick = function(n) {
+		n = parseInt(n);
+		console.log(n);
+		if(this.boardState[n] == 1) {
+			console.log('Board state');
+			return;
+		}
+
+		if(n < 0 || n > (this.width * this.height)) {
+			console.log('Out of bounds');
+			return;
+		}
+
+		console.log('Hello');
+		$('.brick[data-brick=' + n + ']').removeClass('brick-closed').addClass('brick-open');
+		this.openBricks++;
+		this.boardState[n] = 1;
+
+		if(this.numberHints[n] > 0) {
+		 	$('.brick[data-brick=' + n + ']').html('<span class="number" data-number="' + this.numberHints[n] + '">' + this.numberHints[n] + '</span>');
+		 	return;
+		}
+		if(n%this.width == 0 || n%this.width == (this.width-1)) {
+			console.log('Out of bounds 2');
+			return;
+		}
+
+		this.checkBrick(n+1);
+		this.checkBrick(n-1);
+		this.checkBrick(n+this.width);
+		this.checkBrick(n+this.width+1);
+		this.checkBrick(n+this.width-1);
+		this.checkBrick(n-this.width);
+		this.checkBrick(n-this.width+1);
+		this.checkBrick(n-this.width-1);
+		
+	}
+
 	this.open = function(n, hincr, vincr, numberRet) {
 		// No brick openings after board is killed
 		if(this.boardActive) {
@@ -242,58 +284,8 @@ function Board(width, height, mines) {
 			if((jQuery.inArray(parseInt(n), this.minePos) != -1) && hincr == 0 && vincr == 0) {
 				this.killGame(n);
 			}
-			// Recursively open all bricks that should be opened. When opening
-			// a brick with no number and no mines every nearby non-numbered/mined
-			// bricks should open as well as a "border" of numbers.
-			// !!! This needs some more work. 
-			// It should behave something like this but the corners do not open atm.
-			// X - click, # - closed brick, + = hidden mine
-			//
-			// # # # # # # # # + # # + # #
-			// # # # # # + 2 1 1 1 2 # # #
-			// # # # # # + 2       1 + # # 
-			// # # + 1 1 1 1   X   1 2 + #
-			// # # # 1               1 # #
 			else {
-				console.log('n: ' + n + ', hincr: ' + hincr + ', vincr: ' + vincr);
-				if(numberRet || n < 0 || n > (this.width*this.height) || 
-					(((n%this.width) == 0) && hincr > 0) || 
-					(((n%this.width) == (this.width-1) 	&& hincr < 0))) {
-					if(numberRet)
-						console.log("Number return");
-					else
-						console.log("Edge return");
-					return;
-				}
-
-				if($('.brick[data-brick=' + n + ']').hasClass('brick-closed')) {
-					$('.brick[data-brick=' + n + ']').removeClass('brick-closed').addClass('brick-open');
-					this.openBricks++;
-				}
-				
-				console.log('Open bricks: ' + this.openBricks);
-			
-				var numberBrick = (this.numberHints[n] > 0);
-
-				if(numberBrick)
-				 	$('.brick[data-brick=' + n + ']').html('<span class="number" data-number="' + this.numberHints[n] + '">' + this.numberHints[n] + '</span>');
-
-				if(hincr <= 0){
-					console.log('Going left');
-					this.open(n-1, hincr-1, vincr, numberBrick);
-				}
-				if(hincr >= 0) {
-					console.log('Going right');
-					this.open(parseInt(n)+1, hincr+1, vincr, numberBrick);
-				}
-				if(vincr <= 0){
-					console.log('Going up');
-					this.open(n-this.width, hincr, vincr-1, numberBrick);
-				}
-				if(vincr >= 0){
-					console.log('Going down');
-					this.open(parseInt(n)+this.width, hincr, vincr+1, numberBrick);
-				}
+				this.checkBrick(n);
 			}
 			this.didIWin();
 		}
