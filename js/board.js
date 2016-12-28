@@ -46,6 +46,9 @@ function Board(width, height, mines) {
 		// Set restart button to smiley face
 		$('.btn-restart').html('<i class="fa fa-smile-o" aria-hidden="true"></i>');
 
+		// Set mine counter to mine amount
+		$('#mines').html((this.mineAmt < 10) ? '00' + this.mineAmt : (this.mineAmt < 100) ? '0' + this.mineAmt : this.mineAmt);
+
 		// Activate board
 		this.boardActive = true;
 	}
