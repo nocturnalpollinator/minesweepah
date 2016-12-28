@@ -1,66 +1,92 @@
 function Board(width, height, mines) {
 
 	this.firstOpened	= false;
+	this.boardActive	= true;
 	this.timer 			= 0;
 
 	this.width 			= width;
 	this.height 		= height;
 	this.mineAmt 		= mines;
 
+	// - minePos[] has the size of the amount of mines and contains
+	// every position where there's a mine
+	// - numberHints[] has the size of the amount of bricks and contains
+	// values from 0 to 8 depending on the amount of nearby mines
+	// - markers[] has the size of the amount of bricks and contains
+	// values from 0 to 2 depending on it's marker state 
+	// (0 = no marker, 1 = flag marker, 2 = question mark marker)
 	this.minePos 		= [];
 	this.numberHints 	= [];
 	this.markers		= [];
 
 	this.init = function() {
+
+		// Set widths and heights of board 
+		// (20 = width and height of bricks)
 		$('.minefield').css('width', width*20);
 		$('.minefield').css('height', height*20);
 		$('.wrapper').css('width', (width*20)+20);
+
+
 		for(var i = 0; i < this.height; i++) {
 			for(var j = 0; j < this.width; j++) {
+				// Populate grid with closed bricks
 				$('.minefield').append('<div class="brick brick-closed" data-brick="' + (j+(this.width*i)) + '"></div>');
+
+				// Populate markers array with inital values (0)
 				this.markers[(j+(this.width*i))] = 0;
 			}
 		}
+
+		// Set restart button to smiley face
 		$('.btn-restart').html('<i class="fa fa-smile-o" aria-hidden="true"></i>');
+
+		// Activate board
+		this.boardActive = true;
 	}
 
 	this.shuffleMines = function(n) {
 		var randomNumber;
+		// Need parseInt to prevent string concat when using +
 		var n = parseInt(n);
 		for(var i = 0; i < this.mineAmt; i++) {
 			randomNumber = Math.floor(Math.random() * (this.width*this.height));
-			/*
-			No mines or numbers should be under the first opened brick. Therefore there
-			can be no mines on any of the nearby 8 bricks.
-			X X X
-			X O X
-			X X X
-			*/
+
+			// 1. A grid can only hold one mine
+			// 2. No mines or numbers should be under the first opened brick. Therefore there
+			// can be no mines on any of the nearby 8 bricks:
+			// X X X
+			// X O X
+			// X X X
 			if(jQuery.inArray(randomNumber, this.minePos) != -1 ||
 				randomNumber == n || randomNumber == (n-1) || randomNumber == (n+1) ||
 				randomNumber == (n - this.width) || randomNumber == (n + this.width) ||
 				randomNumber == ((n - this.width) + 1) || randomNumber == ((n - this.width) - 1) ||
 				randomNumber == ((n + this.width) + 1) || randomNumber == ((n + this.width) -1)) {
+				// Redo this iteration
 				i--;
 			}
 			else {
 				this.minePos.push(randomNumber);
 			}
 		}
+
+		// Sort mine position array by integer value 
 		this.minePos.sort(function(a, b) {return a-b});
-		console.log(this.minePos);
 	}
 
+	// Debug helper function
 	this.showMines = function() {
 		for(var i = 0; i < this.minePos.length; i++) {
 			$('.brick[data-brick=' + this.minePos[i] + ']').css('background-color', '#fff');
 		}
 	}
 
+	// Generate the helper numbers indicating how many mines are nearby
 	this.generateNumbers = function() {
-		var color;
 		for(var i = 0; i < (this.height*this.width); i++) {
-			var mineCount 	= 0;
+			var mineCount = 0;
+
 			if(jQuery.inArray(i, this.minePos) == -1) {
 
 				var rightEdge	= (i%this.width == (this.width-1));
@@ -68,7 +94,6 @@ function Board(width, height, mines) {
 				var topEdge		= (i - this.width < 0);
 				var bottomEdge	= (i + this.width > (this.width*this.height));
 
-				// Right edge
 				if(rightEdge || (!rightEdge && !leftEdge)) {
 
 					// Left of
@@ -89,7 +114,6 @@ function Board(width, height, mines) {
 					}
 				}
 
-				// Left edge
 				if(leftEdge || (!rightEdge && !leftEdge)) {
 					
 					// Right of
@@ -117,6 +141,8 @@ function Board(width, height, mines) {
 	this.setTimer = function() {
 		time += 1;
 		if(time < 1000) {
+			// Format string to display the right amount of 0's before time:
+			// 003, 034, 200 etc.
 			var str = (time < 10) ? '00' + time : (time < 100) ? '0' + time : time;
 			$('#time').html(str); 
 		}
@@ -129,36 +155,43 @@ function Board(width, height, mines) {
 		time = 0;
 	}
 
-	this.setCounter = function() {
+	this.setMineCounter = function() {
 		var tmp = this.mineAmt;
 		for(var i = 0; i < this.markers.length; i++) {
-			if(this.markers[i] == 1)
+			if(this.markers[i] == 1 && tmp > 0) {
+				// Decrease amount for every flag marker (1) in 
+				// markers array if counter is not set to 0
 				tmp--;
+			}
 		}
+		// Format string to display the right amount of 0's before mine count:
+		// 003, 034, 200 etc.
 		var output = (tmp < 10) ? '00' + tmp : (tmp < 100) ? '0' + tmp : tmp;
-		console.log(output);
 		$('#mines').html(output);
 	}
 
 	this.placeMarker = function(n) {
-		this.markers[n] = (this.markers[n] < 2) ? (this.markers[n] + 1) : 0;
+		// Increase marker to maximum 2 then back to 0
+		this.markers[n] = (this.markers[n] + 1) % 3;
 		switch(this.markers[n]) {
 			case 0: $('.brick[data-brick=' + n + ']').html(''); break;
 			case 1: $('.brick[data-brick=' + n + ']').html('<span class="flag"><i class="fa fa-flag" aria-hidden="true"></i></span>'); break;
 			case 2: $('.brick[data-brick=' + n + ']').html('<span class="questionmark">?</span>');
 		}
-		this.setCounter();
+		this.setMineCounter();
 	}
 
 	this.firstOpening = function(n) {
 		this.firstOpened = true;
 		this.shuffleMines(n);
-		//this.showMines();
 		this.generateNumbers();
+		// Start timer
 		this.timer = window.setInterval(timer, 1000);
 	}
 
 	this.killGame = function(n) {
+
+		// Show all mines
 		for(var i = 0; i < this.minePos.length; i++) {
 			var mineNo = this.minePos[i];
 			$('.brick[data-brick=' + mineNo + ']')
@@ -166,64 +199,86 @@ function Board(width, height, mines) {
 				.addClass('brick-open')
 				.css('background-color', '')
 				.html('<span class="mine"><i class="fa fa-bomb" aria-hidden="true"></i></span>');
+			
+			// Display triggered mine in red
 			if(mineNo == n) {
 				$('.brick[data-brick=' + mineNo + ']').addClass('brick-boom');
 			}
 		}
+
+		// Stop timer
 		window.clearInterval(this.timer);
 		this.timer = 0;
+
+		// Set restart button to frowning smiley
 		$('.btn-restart').html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
+
+		// Disable board
+		this.boardActive = false;
+
+		// Send alert with 0.1s delay to make sure everything has been drawn
 		setTimeout(function(){ alert('Boom. You ded.')}, 100);
 	}
 
 	this.open = function(n, hincr, vincr, numberRet) {
+		// No brick openings after board is killed
+		if(this.boardActive) {
+			// Mines and numbers initialized on the first opened brick.
+			if(!this.firstOpened) {
+				this.firstOpening(n);
+			}
+			// If mine is behind brick - kill game
+			if((jQuery.inArray(parseInt(n), this.minePos) != -1) && hincr == 0 && vincr == 0) {
+				this.killGame(n);
+			}
+			// Recursively open all bricks that should be opened. When opening
+			// a brick with no number and no mines every nearby non-numbered/mined
+			// bricks should open as well as a "border" of numbers.
+			// !!! This needs some more work. 
+			// It should behave something like this but the corners do not open atm.
+			// X - click, # - closed brick, + = hidden mine
+			//
+			// # # # # # # # # + # # + # #
+			// # # # # # + 2 1 1 1 2 # # #
+			// # # # # # + 2       1 + # # 
+			// # # + 1 1 1 1   X   1 2 + #
+			// # # # 1               1 # #
+			else {
+				console.log('n: ' + n + ', hincr: ' + hincr + ', vincr: ' + vincr);
+				if(numberRet || n < 0 || n > (this.width*this.height) || 
+					(((n%this.width) == 0) && hincr > 0) || 
+					(((n%this.width) == (this.width-1) && hincr < 0))) {
+					if(numberRet)
+						console.log("Number return");
+					else
+						console.log("Edge return");
+					return;
+				}
 
-		// Mines and numbers initialized on the first opened brick.
-		if(!this.firstOpened) {
-			this.firstOpening(n);
+				$('.brick[data-brick=' + n + ']').removeClass('brick-closed').addClass('brick-open');
+			
+				var numberBrick = (this.numberHints[n] > 0);
+
+				if(numberBrick)
+				 	$('.brick[data-brick=' + n + ']').html('<span class="number" data-number="' + this.numberHints[n] + '">' + this.numberHints[n] + '</span>');
+
+				if(hincr <= 0){
+					console.log('Going left');
+					this.open(n-1, hincr-1, vincr, numberBrick);
+				}
+				if(vincr >= 0){
+					console.log('Going down');
+					this.open(parseInt(n)+this.width, hincr, vincr+1, numberBrick);
+				}
+				if(vincr <= 0){
+					console.log('Going up');
+					this.open(n-this.width, hincr, vincr-1, numberBrick);
+				}
+				if(hincr >= 0) {
+					console.log('Going right');
+					this.open(parseInt(n)+1, hincr+1, vincr, numberBrick);
+				}
+			}
 		}
-		
-		if((jQuery.inArray(parseInt(n), this.minePos) != -1) && hincr == 0 && vincr == 0) {
-			this.killGame(n);
-		}
-		else {
-			console.log('n: ' + n + ', hincr: ' + hincr + ', vincr: ' + vincr);
-			if(numberRet || n < 0 || n > (this.width*this.height) || (((n%this.width) == 0) && hincr > 0) || (((n%this.width) == (this.width-1) && hincr < 0))) {
-				if(numberRet)
-					console.log("Number return");
-				else
-					console.log("Edge return");
-				return;
-			}
-
-			$('.brick[data-brick=' + n + ']').removeClass('brick-closed').addClass('brick-open');
-		
-			var numberBrick = (this.numberHints[n] > 0);
-
-			if(numberBrick)
-			 	$('.brick[data-brick=' + n + ']').html('<span class="number" data-number="' + this.numberHints[n] + '">' + this.numberHints[n] + '</span>');
-
-			if(hincr <= 0){
-				console.log('Going left');
-				this.open(n-1, hincr-1, vincr, numberBrick);
-			}
-			if(vincr >= 0){
-				console.log('Going down');
-				this.open(parseInt(n)+this.width, hincr, vincr+1, numberBrick);
-			}
-			if(vincr <= 0){
-				console.log('Going up');
-				this.open(n-this.width, hincr, vincr-1, numberBrick);
-			}
-			if(hincr >= 0) {
-				console.log('Going right');
-				this.open(parseInt(n)+1, hincr+1, vincr, numberBrick);
-			}
-		}
-
-		
-		
-		
-
 	}
 }
