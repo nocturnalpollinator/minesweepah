@@ -244,10 +244,12 @@ function Board(width, height, mines) {
 		if(n < 0 || n > (this.width * this.height)) {
 			return;
 		}
-
-		$('.brick[data-brick=' + n + ']').removeClass('brick-closed').addClass('brick-open');
-		this.openBricks++;
-		this.boardState[n] = 1;
+		if(this.boardState[n] == 0) {
+			$('.brick[data-brick=' + n + ']').removeClass('brick-closed').addClass('brick-open');
+			this.openBricks++;
+			this.boardState[n] = 1;
+		}
+		
 
 		if(this.numberHints[n] > 0) {
 		 	$('.brick[data-brick=' + n + ']').html('<span class="number" data-number="' + this.numberHints[n] + '">' + this.numberHints[n] + '</span>');
