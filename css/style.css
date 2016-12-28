@@ -113,7 +113,18 @@ h1 {
   border-bottom: 2px #808080 solid;
   border-right: 2px #808080 solid;
   margin: 0;
-  display: inline-block; }
+  display: inline-block;
+  outline: none; }
+  .btn-restart {
+    font-size: 1.2em;
+    line-height: 1em; }
+    .btn-restart i {
+      margin: -3px 0 0 -3px; }
+  .btn:active {
+    border-bottom: 2px #ffffff solid;
+    border-right: 2px #ffffff solid;
+    border-top: 2px #808080 solid;
+    border-left: 2px #808080 solid; }
 
 .flag {
   color: #fc0005;

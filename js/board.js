@@ -21,6 +21,7 @@ function Board(width, height, mines) {
 				this.markers[(j+(this.width*i))] = 0;
 			}
 		}
+		$('.btn-restart').html('<i class="fa fa-smile-o" aria-hidden="true"></i>');
 	}
 
 	this.shuffleMines = function(n) {
@@ -167,7 +168,7 @@ function Board(width, height, mines) {
 		}
 		window.clearInterval(this.timer);
 		this.timer = 0;
-		$('.btn-restart').html(':(');
+		$('.btn-restart').html('<i class="fa fa-frown-o" aria-hidden="true"></i>');
 		setTimeout(function(){ alert('Boom. You ded.')}, 100);
 	}
 

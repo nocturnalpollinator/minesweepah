@@ -95,6 +95,14 @@ h1
 	@include border-outset(2px)
 	margin: 0
 	display: inline-block
+	outline: none
+	&-restart
+		font-size: 1.2em
+		line-height: 1em
+		i
+			margin: -3px 0 0 -3px
+	&:active
+		@include border-inset(2px)
 
 .flag
 	color: #fc0005
