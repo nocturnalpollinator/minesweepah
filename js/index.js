@@ -5,6 +5,9 @@ var currentDifficulty;
 function newGame(diff) {
 	board.resetTimer();
 	$('.minefield').html('');
+	if(diff != currentDifficulty) {
+		document.querySelector("meta[name=viewport]").setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
+	}
 	currentDifficulty = diff;
 	switch(diff) {
 		case 'easy': 	board = new Board(8, 8, 10); 	break;

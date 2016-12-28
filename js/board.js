@@ -14,7 +14,7 @@ function Board(width, height, mines) {
 	this.init = function() {
 		$('.minefield').css('width', width*20);
 		$('.minefield').css('height', height*20);
-		$('.wrapper').css('max-width', (width*20)+20);
+		$('.wrapper').css('width', (width*20)+20);
 		for(var i = 0; i < this.height; i++) {
 			for(var j = 0; j < this.width; j++) {
 				$('.minefield').append('<div class="brick brick-closed" data-brick="' + (j+(this.width*i)) + '"></div>');
@@ -158,13 +158,17 @@ function Board(width, height, mines) {
 		this.timer = window.setInterval(timer, 1000);
 	}
 
-	this.killGame = function() {
+	this.killGame = function(n) {
 		for(var i = 0; i < this.minePos.length; i++) {
-			$('.brick[data-brick=' + this.minePos[i] + ']')
+			var mineNo = this.minePos[i];
+			$('.brick[data-brick=' + mineNo + ']')
 				.removeClass('brick-closed')
-				.addClass('brick-open brick-boom')
+				.addClass('brick-open')
 				.css('background-color', '')
 				.html('<span class="mine"><i class="fa fa-bomb" aria-hidden="true"></i></span>');
+			if(mineNo == n) {
+				$('.brick[data-brick=' + mineNo + ']').addClass('brick-boom');
+			}
 		}
 		window.clearInterval(this.timer);
 		this.timer = 0;
@@ -180,7 +184,7 @@ function Board(width, height, mines) {
 		}
 		
 		if((jQuery.inArray(parseInt(n), this.minePos) != -1) && hincr == 0 && vincr == 0) {
-			this.killGame();
+			this.killGame(n);
 		}
 		else {
 			console.log('n: ' + n + ', hincr: ' + hincr + ', vincr: ' + vincr);
