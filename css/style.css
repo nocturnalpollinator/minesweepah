@@ -1,7 +1,10 @@
 @import url("https://fonts.googleapis.com/css?family=VT323");
 * {
   font-family: "VT323", monospace;
-  user-select: none; }
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none; }
 
 body {
   margin: 0;
@@ -33,7 +36,8 @@ h1 {
   .cred a:hover {
     color: #999999; }
   .cred .fa-copyright {
-    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
     font-size: 0.9em; }
 
 .stats {
@@ -156,5 +160,3 @@ h1 {
 
 [data-number="8"] {
   color: #808080; }
-
-/*# sourceMappingURL=style.css.map */
