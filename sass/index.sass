@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css?family=VT323')
+
+$bgcolor: #c0c0c0
+
+@mixin border-outset($size)
+	border-top: $size #ffffff solid
+	border-left: $size #ffffff solid
+	border-bottom: $size #808080 solid
+	border-right: $size #808080 solid	
+
+@mixin border-inset($size)
+	border-bottom: $size #ffffff solid
+	border-right: $size #ffffff solid
+	border-top: $size #808080 solid
+	border-left: $size #808080 solid	
+
+*
+	font-family: 'VT323', monospace
+
+body
+	margin: 0
+	padding: 0
+	background: #222
+
+
+.wrapper
+	margin: 100px auto
+
+h1
+	text-align: center
+	margin: 0 0 10px 0
+	color: #666
+
+.gamewindow
+	background: $bgcolor
+	@include border-outset(3px)
+
+.cred
+	margin: 10px 0
+	text-align: center
+	color: #666
+	a, a:visited
+		color: #666
+		text-decoration: none
+	a:hover
+		color: #999
+	.fa-copyright
+		transform: rotate(180deg)
+		font-size: 0.9em
+
+.stats
+	@include border-inset(3px)
+	margin: 7px
+	padding: 5px
+	text-align: center
+	&:after 
+		visibility: hidden
+		display: block
+		content: ""
+		clear: both
+		height: 0
+	button
+		height: 25px
+		width: 25px
+
+.counter
+	background: #000
+	height: 25px
+	width: 40px
+	@include border-inset(1px)
+	color: #fc0005
+	overflow: hidden
+	font-size: 1.75em
+	line-height: 0.9em
+
+#mines
+	float: left
+#time
+	float: right
+
+.minefield
+	margin: 7px
+	@include border-inset(3px)
+
+.brick
+	float: left
+	margin: 0
+	padding: 0
+	overflow: hidden
+	text-align: center
+	&-closed
+		width: 16px
+		height: 16px
+		@include border-outset(2px)
+	&-open
+		width: 19px
+		height: 19px
+		border-bottom: 1px #6b6b6b solid
+		border-left: 1px #6b6b6b solid
+
+.menu
+	margin: 5px 7px 7px 7px
+	text-align: center
+	p
+		margin: 5px 0 0 0
+
+.btn
+	background: $bgcolor
+	@include border-outset(2px)
+	margin: 0
+	display: inline-block
+
+[data-number="1"]
+	color: #0000ff
+[data-number="2"]
+	color: #118301
+[data-number="3"]
+	color: #fc0005
+[data-number="4"]
+	color: #000080
+[data-number="5"]
+	color: #7e0001
+[data-number="6"]
+	color: #118280
+[data-number="7"]
+	color: #000000
+[data-number="8"]
+	color: #808080

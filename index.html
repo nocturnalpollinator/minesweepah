@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>MS Röj</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script src="https://use.fontawesome.com/135a258c97.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/board.js"></script>
+<!-- 	<script src="js/board.js"></script>-->	
+	<script src="js/index.js"></script>
+</head>
+<body>
+
+	<div class="wrapper">
+		<h1>MINESWEEPAH</h1>
+		<div class="gamewindow">
+			<div class="stats">
+				<div class="counter" id="mines">010</div>
+				<button class="btn btn-restart">:)</button>
+				<div class="counter" id="time">000</div>
+			</div>
+
+			<div class="minefield">
+			</div>
+
+			<div class="menu">
+				<button class="btn btn-diff" data-difficulty="easy">EASY</button>
+				<button class="btn btn-diff" data-difficulty="medium">MEDIUM</button>
+				<button class="btn btn-diff" data-difficulty="hard">HARD</button>
+				<p>
+					<button class="btn" data-difficulty="custom" disabled="disabled">CUSTOM</button>
+					<button class="btn" data-difficulty="custom" disabled="disabled">HIGH SCORE</button>
+				</p>
+			</div>
+		</div>
+		<div class="cred">
+			<a href="https://github.com/rubyanderson/minesweeperjs" target="_blank"><i class="fa fa-github fa-2x" aria-hidden="true"></i></a><br>
+			<i class="fa fa-copyright" aria-hidden="true"></i> RUBY ANDERSON, 2016
+		</div>
+		
+	</div>
+	
+</body>
+</html>
