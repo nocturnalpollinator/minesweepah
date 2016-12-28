@@ -253,20 +253,29 @@ function Board(width, height, mines) {
 		 	$('.brick[data-brick=' + n + ']').html('<span class="number" data-number="' + this.numberHints[n] + '">' + this.numberHints[n] + '</span>');
 		 	return;
 		}
-		if(n%this.width == 0 || n%this.width == (this.width-1)) {
-			return;
-		}
 
 		n = parseInt(n);
+		var leftEdge 	= (n%this.width == 0),
+			rightEdge 	= (n%this.width == this.width-1);
+			topEdge 	= (n-this.width < 0);
+			bottomEdge	= (n+this.width > this.width*this.height);
 
-		this.checkBrick(n+1);
-		this.checkBrick(n-1);
-		this.checkBrick(n+this.width);
-		this.checkBrick(n+this.width+1);
-		this.checkBrick(n+this.width-1);
-		this.checkBrick(n-this.width);
-		this.checkBrick(n-this.width+1);
-		this.checkBrick(n-this.width-1);
+		if(!rightEdge)
+			this.checkBrick(n+1);
+		if(!leftEdge)
+			this.checkBrick(n-1);
+		if(!bottomEdge)
+			this.checkBrick(n+this.width);
+			if(!rightEdge)
+				this.checkBrick(n+this.width+1);
+			if(!leftEdge)
+				this.checkBrick(n+this.width-1);
+		if(!topEdge)
+			this.checkBrick(n-this.width);
+			if(!rightEdge)
+				this.checkBrick(n-this.width+1);
+			if(!leftEdge)
+				this.checkBrick(n-this.width-1);
 		
 	}
 
