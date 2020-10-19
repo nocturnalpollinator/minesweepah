@@ -1,10 +1,4 @@
 # minesweepah
-JavaScript/jQuery-based minesweeper game. No images used and can be minified down to ~30kB if you don't like comments and readable code and don't have a problem with code and fonts being hosted somewhere else. 
+JavaScript/jQuery-based minesweeper game written back in 2016. 
 
-Live version: http://minesweepah.rubyanderson.se
-
-## TODO
-- [x] Basic functionality
-- [ ] Design custom alert boxes
-- [ ] Add custom game
-- [ ] Add high score table
+Live version: https://happymeal.monster/minesweepah

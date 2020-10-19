@@ -1,44 +1,49 @@
 @import url("https://fonts.googleapis.com/css?family=VT323");
 * {
   font-family: "VT323", monospace;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none; }
+  user-select: none;
+}
 
 body {
   margin: 0;
   padding: 0;
-  background: #222; }
+  background: #222;
+}
 
 .wrapper {
-  margin: 100px auto; }
+  margin: 100px auto;
+}
 
 h1 {
   text-align: center;
   margin: 0 0 10px 0;
-  color: #666666; }
+  color: #666666;
+}
 
 .gamewindow {
   background-color: #c0c0c0;
   border-top: 3px #ffffff solid;
   border-left: 3px #ffffff solid;
   border-bottom: 3px #808080 solid;
-  border-right: 3px #808080 solid; }
+  border-right: 3px #808080 solid;
+}
 
 .cred {
   margin: 10px 0;
   text-align: center;
-  color: #666666; }
-  .cred a, .cred a:visited {
-    color: #666666;
-    text-decoration: none; }
-  .cred a:hover {
-    color: #999999; }
-  .cred .fa-copyright {
-    -webkit-transform: rotate(180deg);
-            transform: rotate(180deg);
-    font-size: 0.9em; }
+  color: #666666;
+}
+.cred a, .cred a:visited {
+  color: #666666;
+  text-decoration: none;
+}
+.cred a:hover {
+  color: #999999;
+}
+.cred .fa-copyright {
+  transform: rotate(180deg);
+  font-size: 0.9em;
+}
 
 .stats {
   border-bottom: 3px #ffffff solid;
@@ -47,16 +52,19 @@ h1 {
   border-left: 3px #808080 solid;
   margin: 7px;
   padding: 5px;
-  text-align: center; }
-  .stats:after {
-    visibility: hidden;
-    display: block;
-    content: "";
-    clear: both;
-    height: 0; }
-  .stats button {
-    height: 25px;
-    width: 25px; }
+  text-align: center;
+}
+.stats:after {
+  visibility: hidden;
+  display: block;
+  content: "";
+  clear: both;
+  height: 0;
+}
+.stats button {
+  height: 25px;
+  width: 25px;
+}
 
 .counter {
   background: #000;
@@ -69,48 +77,58 @@ h1 {
   color: #fc0005;
   overflow: hidden;
   font-size: 1.75em;
-  line-height: 0.9em; }
+  line-height: 0.9em;
+}
 
 #mines {
-  float: left; }
+  float: left;
+}
 
 #time {
-  float: right; }
+  float: right;
+}
 
 .minefield {
   margin: 7px;
   border-bottom: 3px #ffffff solid;
   border-right: 3px #ffffff solid;
   border-top: 3px #808080 solid;
-  border-left: 3px #808080 solid; }
+  border-left: 3px #808080 solid;
+}
 
 .brick {
   float: left;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  text-align: center; }
-  .brick-closed {
-    width: 16px;
-    height: 16px;
-    border-top: 2px #ffffff solid;
-    border-left: 2px #ffffff solid;
-    border-bottom: 2px #808080 solid;
-    border-right: 2px #808080 solid;
-    cursor: pointer; }
-  .brick-open {
-    width: 19px;
-    height: 19px;
-    border-bottom: 1px #6b6b6b solid;
-    border-left: 1px #6b6b6b solid; }
-  .brick-boom {
-    background: #fc0005; }
+  text-align: center;
+}
+.brick-closed {
+  width: 16px;
+  height: 16px;
+  border-top: 2px #ffffff solid;
+  border-left: 2px #ffffff solid;
+  border-bottom: 2px #808080 solid;
+  border-right: 2px #808080 solid;
+  cursor: pointer;
+}
+.brick-open {
+  width: 19px;
+  height: 19px;
+  border-bottom: 1px #6b6b6b solid;
+  border-left: 1px #6b6b6b solid;
+}
+.brick-boom {
+  background: #fc0005;
+}
 
 .menu {
   margin: 5px 7px 7px 7px;
-  text-align: center; }
-  .menu p {
-    margin: 5px 0 0 0; }
+  text-align: center;
+}
+.menu p {
+  margin: 5px 0 0 0;
+}
 
 .btn {
   background-color: #c0c0c0;
@@ -120,43 +138,59 @@ h1 {
   border-right: 2px #808080 solid;
   margin: 0;
   display: inline-block;
-  outline: none; }
-  .btn-restart {
-    font-size: 1.2em;
-    line-height: 1em; }
-    .btn-restart i {
-      margin: -3px 0 0 -3px; }
-  .btn:active {
-    border-bottom: 2px #ffffff solid;
-    border-right: 2px #ffffff solid;
-    border-top: 2px #808080 solid;
-    border-left: 2px #808080 solid; }
+  outline: none;
+}
+.btn-restart {
+  font-size: 1.2em;
+  line-height: 1em;
+  padding: 0;
+}
+.btn-restart i {
+  margin: 0;
+}
+.btn:active {
+  border-bottom: 2px #ffffff solid;
+  border-right: 2px #ffffff solid;
+  border-top: 2px #808080 solid;
+  border-left: 2px #808080 solid;
+}
 
 .flag {
   color: #fc0005;
   font-size: 0.8em;
-  line-height: 0.7em; }
+  line-height: 0.7em;
+}
 
 [data-number="1"] {
-  color: #0000ff; }
+  color: #0000ff;
+}
 
 [data-number="2"] {
-  color: #118301; }
+  color: #118301;
+}
 
 [data-number="3"] {
-  color: #fc0005; }
+  color: #fc0005;
+}
 
 [data-number="4"] {
-  color: #000080; }
+  color: #000080;
+}
 
 [data-number="5"] {
-  color: #7e0001; }
+  color: #7e0001;
+}
 
 [data-number="6"] {
-  color: #118280; }
+  color: #118280;
+}
 
 [data-number="7"] {
-  color: #000000; }
+  color: #000000;
+}
 
 [data-number="8"] {
-  color: #808080; }
+  color: #808080;
+}
+
+/*# sourceMappingURL=style.css.map */
